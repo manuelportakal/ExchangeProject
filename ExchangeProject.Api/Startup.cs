@@ -1,6 +1,9 @@
+using ExchangeProject.DataAccess.Concrete.EntityFramework.Context;
+using ExchangeProject.Entities.Concrete;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +29,8 @@ namespace ExchangeProject.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddDbContext<ExchangeDbContext>();
+            services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<ExchangeDbContext>().AddDefaultTokenProviders();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -48,6 +52,7 @@ namespace ExchangeProject.Api
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
