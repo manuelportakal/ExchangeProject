@@ -185,8 +185,7 @@ namespace ExchangeProject.DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -196,28 +195,49 @@ namespace ExchangeProject.DataAccess.Migrations
                         column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Transaction",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CoinId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TransactionTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Transaction", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Transaction_Coins_CoinId",
+                        column: x => x.CoinId,
+                        principalTable: "Coins",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "CoinPair",
                 columns: table => new
                 {
-                    CoinsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PairsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CoinId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PairId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CoinPair", x => new { x.CoinsId, x.PairsId });
+                    table.PrimaryKey("PK_CoinPair", x => new { x.PairId, x.CoinId });
                     table.ForeignKey(
-                        name: "FK_CoinPair_Coins_CoinsId",
-                        column: x => x.CoinsId,
+                        name: "FK_CoinPair_Coins_CoinId",
+                        column: x => x.CoinId,
                         principalTable: "Coins",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CoinPair_Pairs_PairsId",
-                        column: x => x.PairsId,
+                        name: "FK_CoinPair_Pairs_PairId",
+                        column: x => x.PairId,
                         principalTable: "Pairs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -243,24 +263,50 @@ namespace ExchangeProject.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AssetCoin",
+                name: "WalletTransaction",
                 columns: table => new
                 {
-                    AssetsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CoinsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    WalletId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TransactionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AssetCoin", x => new { x.AssetsId, x.CoinsId });
+                    table.PrimaryKey("PK_WalletTransaction", x => new { x.WalletId, x.TransactionId });
                     table.ForeignKey(
-                        name: "FK_AssetCoin_Asset_AssetsId",
-                        column: x => x.AssetsId,
+                        name: "FK_WalletTransaction_Transaction_TransactionId",
+                        column: x => x.TransactionId,
+                        principalTable: "Transaction",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_WalletTransaction_Wallet_WalletId",
+                        column: x => x.WalletId,
+                        principalTable: "Wallet",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AssetCoin",
+                columns: table => new
+                {
+                    AssetId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CoinId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AssetCoin", x => new { x.CoinId, x.AssetId });
+                    table.ForeignKey(
+                        name: "FK_AssetCoin_Asset_AssetId",
+                        column: x => x.AssetId,
                         principalTable: "Asset",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AssetCoin_Coins_CoinsId",
-                        column: x => x.CoinsId,
+                        name: "FK_AssetCoin_Coins_CoinId",
+                        column: x => x.CoinId,
                         principalTable: "Coins",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -311,19 +357,30 @@ namespace ExchangeProject.DataAccess.Migrations
                 column: "WalletId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AssetCoin_CoinsId",
+                name: "IX_AssetCoin_AssetId",
                 table: "AssetCoin",
-                column: "CoinsId");
+                column: "AssetId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CoinPair_PairsId",
+                name: "IX_CoinPair_CoinId",
                 table: "CoinPair",
-                column: "PairsId");
+                column: "CoinId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transaction_CoinId",
+                table: "Transaction",
+                column: "CoinId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Wallet_AppUserId",
                 table: "Wallet",
-                column: "AppUserId");
+                column: "AppUserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WalletTransaction_TransactionId",
+                table: "WalletTransaction",
+                column: "TransactionId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -350,19 +407,25 @@ namespace ExchangeProject.DataAccess.Migrations
                 name: "CoinPair");
 
             migrationBuilder.DropTable(
+                name: "WalletTransaction");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Asset");
 
             migrationBuilder.DropTable(
-                name: "Coins");
-
-            migrationBuilder.DropTable(
                 name: "Pairs");
 
             migrationBuilder.DropTable(
+                name: "Transaction");
+
+            migrationBuilder.DropTable(
                 name: "Wallet");
+
+            migrationBuilder.DropTable(
+                name: "Coins");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

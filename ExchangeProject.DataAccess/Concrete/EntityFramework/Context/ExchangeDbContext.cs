@@ -1,4 +1,5 @@
-﻿using ExchangeProject.Entities.Concrete;
+﻿using ExchangeProject.DataAccess.Concrete.EntityFramework.Mapping;
+using ExchangeProject.Entities.Concrete;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,15 +22,16 @@ namespace ExchangeProject.DataAccess.Concrete.EntityFramework.Context
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<AppUser>().HasOne(a => a.Wallet).WithOne(a => a.AppUser).HasForeignKey<Wallet>(c => c.AppUserId);
-
-            builder.Entity<Coin>().HasMany(x => x.CoinPairs).WithOne(x => x.Coin).HasForeignKey(x => x.CoinId);
-            builder.Entity<Pair>().HasMany(x => x.CoinPairs).WithOne(x => x.Pair).HasForeignKey(x => x.PairId);
-            builder.Entity<CoinPair>().HasKey(x => new { x.PairId, x.CoinId });
-
-            builder.Entity<Asset>().HasMany(x => x.AssetCoins).WithOne(x => x.Asset).HasForeignKey(x => x.AssetId);
-            builder.Entity<Coin>().HasMany(x => x.AssetCoins).WithOne(x => x.Coin).HasForeignKey(x => x.CoinId);
-            builder.Entity<AssetCoin>().HasKey(x => new { x.CoinId, x.AssetId });
+            builder.ApplyConfiguration(new AppRoleMap());
+            builder.ApplyConfiguration(new AppUserMap());
+            builder.ApplyConfiguration(new AssetCoinMap());
+            builder.ApplyConfiguration(new AssetMap());
+            builder.ApplyConfiguration(new CoinMap());
+            builder.ApplyConfiguration(new CoinPairMap());
+            builder.ApplyConfiguration(new PairMap());
+            builder.ApplyConfiguration(new WalletMap());
+            builder.ApplyConfiguration(new TransactionMap());
+            builder.ApplyConfiguration(new WalletTransactionMap());
 
             base.OnModelCreating(builder);
         }

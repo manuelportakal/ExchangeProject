@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExchangeProject.DataAccess.Migrations
 {
     [DbContext(typeof(ExchangeDbContext))]
-    [Migration("20210901140757_InitialCreate2")]
-    partial class InitialCreate2
+    [Migration("20210902125529_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,36 +20,6 @@ namespace ExchangeProject.DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("AssetCoin", b =>
-                {
-                    b.Property<Guid>("AssetsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CoinsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("AssetsId", "CoinsId");
-
-                    b.HasIndex("CoinsId");
-
-                    b.ToTable("AssetCoin");
-                });
-
-            modelBuilder.Entity("CoinPair", b =>
-                {
-                    b.Property<Guid>("CoinsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PairsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("CoinsId", "PairsId");
-
-                    b.HasIndex("PairsId");
-
-                    b.ToTable("CoinPair");
-                });
 
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.AppRole", b =>
                 {
@@ -170,6 +140,24 @@ namespace ExchangeProject.DataAccess.Migrations
                     b.ToTable("Asset");
                 });
 
+            modelBuilder.Entity("ExchangeProject.Entities.Concrete.AssetCoin", b =>
+                {
+                    b.Property<Guid>("CoinId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AssetId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("CoinId", "AssetId");
+
+                    b.HasIndex("AssetId");
+
+                    b.ToTable("AssetCoin");
+                });
+
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.Coin", b =>
                 {
                     b.Property<Guid>("Id")
@@ -190,6 +178,24 @@ namespace ExchangeProject.DataAccess.Migrations
                     b.ToTable("Coins");
                 });
 
+            modelBuilder.Entity("ExchangeProject.Entities.Concrete.CoinPair", b =>
+                {
+                    b.Property<Guid>("PairId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CoinId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("PairId", "CoinId");
+
+                    b.HasIndex("CoinId");
+
+                    b.ToTable("CoinPair");
+                });
+
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.Pair", b =>
                 {
                     b.Property<Guid>("Id")
@@ -204,21 +210,61 @@ namespace ExchangeProject.DataAccess.Migrations
                     b.ToTable("Pairs");
                 });
 
+            modelBuilder.Entity("ExchangeProject.Entities.Concrete.Transaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("CoinId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("TransactionTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CoinId");
+
+                    b.ToTable("Transaction");
+                });
+
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.Wallet", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("AppUserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
+                    b.HasIndex("AppUserId")
                         .IsUnique();
 
                     b.ToTable("Wallet");
+                });
+
+            modelBuilder.Entity("ExchangeProject.Entities.Concrete.WalletTransaction", b =>
+                {
+                    b.Property<Guid>("WalletId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TransactionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("WalletId", "TransactionId");
+
+                    b.HasIndex("TransactionId");
+
+                    b.ToTable("WalletTransaction");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -322,36 +368,6 @@ namespace ExchangeProject.DataAccess.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("AssetCoin", b =>
-                {
-                    b.HasOne("ExchangeProject.Entities.Concrete.Asset", null)
-                        .WithMany()
-                        .HasForeignKey("AssetsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ExchangeProject.Entities.Concrete.Coin", null)
-                        .WithMany()
-                        .HasForeignKey("CoinsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("CoinPair", b =>
-                {
-                    b.HasOne("ExchangeProject.Entities.Concrete.Coin", null)
-                        .WithMany()
-                        .HasForeignKey("CoinsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ExchangeProject.Entities.Concrete.Pair", null)
-                        .WithMany()
-                        .HasForeignKey("PairsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.Asset", b =>
                 {
                     b.HasOne("ExchangeProject.Entities.Concrete.Wallet", "Wallet")
@@ -363,15 +379,83 @@ namespace ExchangeProject.DataAccess.Migrations
                     b.Navigation("Wallet");
                 });
 
+            modelBuilder.Entity("ExchangeProject.Entities.Concrete.AssetCoin", b =>
+                {
+                    b.HasOne("ExchangeProject.Entities.Concrete.Asset", "Asset")
+                        .WithMany("AssetCoins")
+                        .HasForeignKey("AssetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ExchangeProject.Entities.Concrete.Coin", "Coin")
+                        .WithMany("AssetCoins")
+                        .HasForeignKey("CoinId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Asset");
+
+                    b.Navigation("Coin");
+                });
+
+            modelBuilder.Entity("ExchangeProject.Entities.Concrete.CoinPair", b =>
+                {
+                    b.HasOne("ExchangeProject.Entities.Concrete.Coin", "Coin")
+                        .WithMany("CoinPairs")
+                        .HasForeignKey("CoinId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ExchangeProject.Entities.Concrete.Pair", "Pair")
+                        .WithMany("CoinPairs")
+                        .HasForeignKey("PairId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Coin");
+
+                    b.Navigation("Pair");
+                });
+
+            modelBuilder.Entity("ExchangeProject.Entities.Concrete.Transaction", b =>
+                {
+                    b.HasOne("ExchangeProject.Entities.Concrete.Coin", "Coin")
+                        .WithMany("Transactions")
+                        .HasForeignKey("CoinId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Coin");
+                });
+
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.Wallet", b =>
                 {
                     b.HasOne("ExchangeProject.Entities.Concrete.AppUser", "AppUser")
                         .WithOne("Wallet")
-                        .HasForeignKey("ExchangeProject.Entities.Concrete.Wallet", "UserId")
+                        .HasForeignKey("ExchangeProject.Entities.Concrete.Wallet", "AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("ExchangeProject.Entities.Concrete.WalletTransaction", b =>
+                {
+                    b.HasOne("ExchangeProject.Entities.Concrete.Transaction", "Transaction")
+                        .WithMany("WalletTransactions")
+                        .HasForeignKey("TransactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ExchangeProject.Entities.Concrete.Wallet", "Wallet")
+                        .WithMany("WalletTransactions")
+                        .HasForeignKey("WalletId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Transaction");
+
+                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -430,9 +514,35 @@ namespace ExchangeProject.DataAccess.Migrations
                     b.Navigation("Wallet");
                 });
 
+            modelBuilder.Entity("ExchangeProject.Entities.Concrete.Asset", b =>
+                {
+                    b.Navigation("AssetCoins");
+                });
+
+            modelBuilder.Entity("ExchangeProject.Entities.Concrete.Coin", b =>
+                {
+                    b.Navigation("AssetCoins");
+
+                    b.Navigation("CoinPairs");
+
+                    b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("ExchangeProject.Entities.Concrete.Pair", b =>
+                {
+                    b.Navigation("CoinPairs");
+                });
+
+            modelBuilder.Entity("ExchangeProject.Entities.Concrete.Transaction", b =>
+                {
+                    b.Navigation("WalletTransactions");
+                });
+
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.Wallet", b =>
                 {
                     b.Navigation("Assets");
+
+                    b.Navigation("WalletTransactions");
                 });
 #pragma warning restore 612, 618
         }

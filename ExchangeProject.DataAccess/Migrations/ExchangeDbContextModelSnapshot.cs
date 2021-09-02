@@ -208,21 +208,61 @@ namespace ExchangeProject.DataAccess.Migrations
                     b.ToTable("Pairs");
                 });
 
+            modelBuilder.Entity("ExchangeProject.Entities.Concrete.Transaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("CoinId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("TransactionTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CoinId");
+
+                    b.ToTable("Transaction");
+                });
+
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.Wallet", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("AppUserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
+                    b.HasIndex("AppUserId")
                         .IsUnique();
 
                     b.ToTable("Wallet");
+                });
+
+            modelBuilder.Entity("ExchangeProject.Entities.Concrete.WalletTransaction", b =>
+                {
+                    b.Property<Guid>("WalletId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TransactionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("WalletId", "TransactionId");
+
+                    b.HasIndex("TransactionId");
+
+                    b.ToTable("WalletTransaction");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -375,15 +415,45 @@ namespace ExchangeProject.DataAccess.Migrations
                     b.Navigation("Pair");
                 });
 
+            modelBuilder.Entity("ExchangeProject.Entities.Concrete.Transaction", b =>
+                {
+                    b.HasOne("ExchangeProject.Entities.Concrete.Coin", "Coin")
+                        .WithMany("Transactions")
+                        .HasForeignKey("CoinId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Coin");
+                });
+
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.Wallet", b =>
                 {
                     b.HasOne("ExchangeProject.Entities.Concrete.AppUser", "AppUser")
                         .WithOne("Wallet")
-                        .HasForeignKey("ExchangeProject.Entities.Concrete.Wallet", "UserId")
+                        .HasForeignKey("ExchangeProject.Entities.Concrete.Wallet", "AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("ExchangeProject.Entities.Concrete.WalletTransaction", b =>
+                {
+                    b.HasOne("ExchangeProject.Entities.Concrete.Transaction", "Transaction")
+                        .WithMany("WalletTransactions")
+                        .HasForeignKey("TransactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ExchangeProject.Entities.Concrete.Wallet", "Wallet")
+                        .WithMany("WalletTransactions")
+                        .HasForeignKey("WalletId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Transaction");
+
+                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -452,6 +522,8 @@ namespace ExchangeProject.DataAccess.Migrations
                     b.Navigation("AssetCoins");
 
                     b.Navigation("CoinPairs");
+
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.Pair", b =>
@@ -459,9 +531,16 @@ namespace ExchangeProject.DataAccess.Migrations
                     b.Navigation("CoinPairs");
                 });
 
+            modelBuilder.Entity("ExchangeProject.Entities.Concrete.Transaction", b =>
+                {
+                    b.Navigation("WalletTransactions");
+                });
+
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.Wallet", b =>
                 {
                     b.Navigation("Assets");
+
+                    b.Navigation("WalletTransactions");
                 });
 #pragma warning restore 612, 618
         }
