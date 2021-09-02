@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace ExchangeProject.Entities.Concrete
 {
-    public class Wallet : IEntity
+    public class Transaction : IEntity
     {
         public Guid Id { get; set; }
-        public Guid AppUserId { get; set; }
-        public AppUser AppUser { get; set; }
-        public List<Asset> Assets { get; set; }
         public List<WalletTransaction> WalletTransactions { get; set; }
+        public Guid CoinId { get; set; }
+        public Coin Coin { get; set; }
+        public decimal Amount { get; set; }
+        public DateTime TransactionTime { get; set; }
     }
 }

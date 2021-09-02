@@ -15,5 +15,6 @@ namespace ExchangeProject.Entities.Concrete
         public string Symbol { get; set; }
         public List<CoinPair> CoinPairs { get; set; }
         public List<AssetCoin> AssetCoins { get; set; }
+        public List<Transaction> Transactions { get; set; }
     }
 }
