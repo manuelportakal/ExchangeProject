@@ -13,7 +13,6 @@ namespace ExchangeProject.Common.DataAccess
     {
         IAppRoleRepository AppRole { get; }
         IAppUserRepository AppUser { get; }
-        IAssetCoinRepository AssetCoin { get; }
         IAssetRepository Asset { get; }
         IWalletRepository Wallet { get; }
         ICoinRepository Coin { get; }

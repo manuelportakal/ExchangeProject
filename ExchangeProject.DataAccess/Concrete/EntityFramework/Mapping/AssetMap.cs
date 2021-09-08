@@ -14,7 +14,6 @@ namespace ExchangeProject.DataAccess.Concrete.EntityFramework.Mapping
         public void Configure(EntityTypeBuilder<Asset> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.HasMany(x => x.AssetCoins).WithOne(x => x.Asset).HasForeignKey(x => x.AssetId);
         }
     }
 }

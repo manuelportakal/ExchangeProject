@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExchangeProject.DataAccess.Migrations
 {
     [DbContext(typeof(ExchangeDbContext))]
-    [Migration("20210902125529_InitialCreate")]
+    [Migration("20210908093448_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,6 +47,20 @@ namespace ExchangeProject.DataAccess.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("aa835070-6a78-42c6-99df-c14682615666"),
+                            ConcurrencyStamp = "d86edc7a-432b-4f58-943c-fff011f97649",
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = new Guid("f7f50d37-b8d5-4cf4-9c3b-427463a871b8"),
+                            ConcurrencyStamp = "50410ae9-d65a-4263-930c-6d193c963c48",
+                            Name = "Member"
+                        });
                 });
 
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.AppUser", b =>
@@ -119,6 +133,38 @@ namespace ExchangeProject.DataAccess.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "0d366152-b779-48fa-b156-cc619631b797",
+                            Email = "yavuzemilli@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "Yavuz",
+                            LastName = "Emilli",
+                            LockoutEnabled = false,
+                            PasswordHash = "AQAAAAEAACcQAAAAEJGf+hXmI8zoCUnoIbM6Ji7I7TIrw77MTDD/oHaHQ8zNj1y3DZx/qKTy6s619D4euA==",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "manuelportakal"
+                        },
+                        new
+                        {
+                            Id = new Guid("d776cec2-4120-4d88-b8a5-ece32765a970"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "ce6213dd-3e66-44c9-bfa3-172c627b4364",
+                            Email = "erenozder@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "Eren",
+                            LastName = "Ozder",
+                            LockoutEnabled = false,
+                            PasswordHash = "AQAAAAEAACcQAAAAECy/klVN7MCsbE4AdjXhw29xA2PxUVcD506g5WkzzKsTX9yQdiPaT4AeDel49BuVxg==",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "erno"
+                        });
                 });
 
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.Asset", b =>
@@ -130,32 +176,35 @@ namespace ExchangeProject.DataAccess.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<Guid>("CoinId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("WalletId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CoinId");
+
                     b.HasIndex("WalletId");
 
                     b.ToTable("Asset");
-                });
 
-            modelBuilder.Entity("ExchangeProject.Entities.Concrete.AssetCoin", b =>
-                {
-                    b.Property<Guid>("CoinId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AssetId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("CoinId", "AssetId");
-
-                    b.HasIndex("AssetId");
-
-                    b.ToTable("AssetCoin");
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("6a05d346-411a-4ca8-972f-d8ce354d4070"),
+                            Amount = 9999m,
+                            CoinId = new Guid("4c69b0b4-4633-45e6-b461-48684bc23011"),
+                            WalletId = new Guid("83d8f26c-e7d3-4480-bdd5-500d700e2ec9")
+                        },
+                        new
+                        {
+                            Id = new Guid("6cd1257e-f45f-4872-9379-2e1882597562"),
+                            Amount = 1m,
+                            CoinId = new Guid("4c69b0b4-4633-45e6-b461-48684bc23011"),
+                            WalletId = new Guid("621d80cf-cb97-46b2-9f0c-64e68031c859")
+                        });
                 });
 
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.Coin", b =>
@@ -176,6 +225,44 @@ namespace ExchangeProject.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Coins");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("4c69b0b4-4633-45e6-b461-48684bc23011"),
+                            Code = "BTC",
+                            Name = "Bitcoin"
+                        },
+                        new
+                        {
+                            Id = new Guid("e1493a7f-5c0e-4f53-97a5-745222430809"),
+                            Code = "ETH",
+                            Name = "Ethereum"
+                        },
+                        new
+                        {
+                            Id = new Guid("41ec3edd-12a6-47dd-beef-6ea0cd5c5788"),
+                            Code = "ADA",
+                            Name = "Cardano"
+                        },
+                        new
+                        {
+                            Id = new Guid("68c216d0-bb53-416f-b65d-7066be83c744"),
+                            Code = "BNB",
+                            Name = "Binance Coin"
+                        },
+                        new
+                        {
+                            Id = new Guid("5aa4cd28-38a4-4b55-a9f5-e03a0569a1a9"),
+                            Code = "USDT",
+                            Name = "Tether"
+                        },
+                        new
+                        {
+                            Id = new Guid("21ce2213-fd86-43c5-bb0a-c5f0ef6439e5"),
+                            Code = "SOL",
+                            Name = "Solana"
+                        });
                 });
 
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.CoinPair", b =>
@@ -194,6 +281,68 @@ namespace ExchangeProject.DataAccess.Migrations
                     b.HasIndex("CoinId");
 
                     b.ToTable("CoinPair");
+
+                    b.HasData(
+                        new
+                        {
+                            PairId = new Guid("3fbf715a-e9b4-4324-987e-1459ad1435f9"),
+                            CoinId = new Guid("4c69b0b4-4633-45e6-b461-48684bc23011"),
+                            Id = new Guid("7d1e7831-af96-42df-b768-8647a324cbbf")
+                        },
+                        new
+                        {
+                            PairId = new Guid("3fbf715a-e9b4-4324-987e-1459ad1435f9"),
+                            CoinId = new Guid("5aa4cd28-38a4-4b55-a9f5-e03a0569a1a9"),
+                            Id = new Guid("7d1e7831-af96-42df-b768-8647a324cbbf")
+                        },
+                        new
+                        {
+                            PairId = new Guid("6d9b7d78-b560-4de1-9359-82c71848c42b"),
+                            CoinId = new Guid("e1493a7f-5c0e-4f53-97a5-745222430809"),
+                            Id = new Guid("7683f95c-5b64-45fb-bd14-e308dd29aee7")
+                        },
+                        new
+                        {
+                            PairId = new Guid("6d9b7d78-b560-4de1-9359-82c71848c42b"),
+                            CoinId = new Guid("5aa4cd28-38a4-4b55-a9f5-e03a0569a1a9"),
+                            Id = new Guid("7683f95c-5b64-45fb-bd14-e308dd29aee7")
+                        },
+                        new
+                        {
+                            PairId = new Guid("77033d4b-0933-43ec-978f-2387f3f0a702"),
+                            CoinId = new Guid("41ec3edd-12a6-47dd-beef-6ea0cd5c5788"),
+                            Id = new Guid("b69b0f5a-9e96-4a21-9461-1af0a37957b4")
+                        },
+                        new
+                        {
+                            PairId = new Guid("77033d4b-0933-43ec-978f-2387f3f0a702"),
+                            CoinId = new Guid("5aa4cd28-38a4-4b55-a9f5-e03a0569a1a9"),
+                            Id = new Guid("b69b0f5a-9e96-4a21-9461-1af0a37957b4")
+                        },
+                        new
+                        {
+                            PairId = new Guid("b1f5e042-2814-4633-95b9-5a9bd6161301"),
+                            CoinId = new Guid("68c216d0-bb53-416f-b65d-7066be83c744"),
+                            Id = new Guid("a4b6d863-2b21-4011-8e3c-adbe99423bda")
+                        },
+                        new
+                        {
+                            PairId = new Guid("b1f5e042-2814-4633-95b9-5a9bd6161301"),
+                            CoinId = new Guid("5aa4cd28-38a4-4b55-a9f5-e03a0569a1a9"),
+                            Id = new Guid("a4b6d863-2b21-4011-8e3c-adbe99423bda")
+                        },
+                        new
+                        {
+                            PairId = new Guid("ac85e80e-f34f-4aae-80ce-39999aa8c56a"),
+                            CoinId = new Guid("21ce2213-fd86-43c5-bb0a-c5f0ef6439e5"),
+                            Id = new Guid("4cd794ba-572c-4014-b6aa-9d9d7c701b21")
+                        },
+                        new
+                        {
+                            PairId = new Guid("ac85e80e-f34f-4aae-80ce-39999aa8c56a"),
+                            CoinId = new Guid("5aa4cd28-38a4-4b55-a9f5-e03a0569a1a9"),
+                            Id = new Guid("4cd794ba-572c-4014-b6aa-9d9d7c701b21")
+                        });
                 });
 
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.Pair", b =>
@@ -202,12 +351,47 @@ namespace ExchangeProject.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Pairs");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("3fbf715a-e9b4-4324-987e-1459ad1435f9"),
+                            Name = "BTC-USDT",
+                            Price = 51317.89m
+                        },
+                        new
+                        {
+                            Id = new Guid("6d9b7d78-b560-4de1-9359-82c71848c42b"),
+                            Name = "ETH-USDT",
+                            Price = 3772.04m
+                        },
+                        new
+                        {
+                            Id = new Guid("77033d4b-0933-43ec-978f-2387f3f0a702"),
+                            Name = "ADA-USDT",
+                            Price = 2.64m
+                        },
+                        new
+                        {
+                            Id = new Guid("b1f5e042-2814-4633-95b9-5a9bd6161301"),
+                            Name = "BNB-USDT",
+                            Price = 479.59m
+                        },
+                        new
+                        {
+                            Id = new Guid("ac85e80e-f34f-4aae-80ce-39999aa8c56a"),
+                            Name = "SOLANA-USDT",
+                            Price = 182.94m
+                        });
                 });
 
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.Transaction", b =>
@@ -216,11 +400,11 @@ namespace ExchangeProject.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<Guid>("CoinId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
 
                     b.Property<DateTime>("TransactionTime")
                         .HasColumnType("datetime2");
@@ -230,6 +414,15 @@ namespace ExchangeProject.DataAccess.Migrations
                     b.HasIndex("CoinId");
 
                     b.ToTable("Transaction");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("04aeaea9-713d-4519-9c8f-eef4acced9cf"),
+                            CoinId = new Guid("4c69b0b4-4633-45e6-b461-48684bc23011"),
+                            Status = (byte)1,
+                            TransactionTime = new DateTime(2021, 9, 8, 9, 34, 47, 887, DateTimeKind.Utc).AddTicks(9184)
+                        });
                 });
 
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.Wallet", b =>
@@ -247,6 +440,18 @@ namespace ExchangeProject.DataAccess.Migrations
                         .IsUnique();
 
                     b.ToTable("Wallet");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("83d8f26c-e7d3-4480-bdd5-500d700e2ec9"),
+                            AppUserId = new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9")
+                        },
+                        new
+                        {
+                            Id = new Guid("621d80cf-cb97-46b2-9f0c-64e68031c859"),
+                            AppUserId = new Guid("d776cec2-4120-4d88-b8a5-ece32765a970")
+                        });
                 });
 
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.WalletTransaction", b =>
@@ -257,14 +462,38 @@ namespace ExchangeProject.DataAccess.Migrations
                     b.Property<Guid>("TransactionId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("TransactionRole")
+                        .HasColumnType("int");
 
                     b.HasKey("WalletId", "TransactionId");
 
                     b.HasIndex("TransactionId");
 
                     b.ToTable("WalletTransaction");
+
+                    b.HasData(
+                        new
+                        {
+                            WalletId = new Guid("83d8f26c-e7d3-4480-bdd5-500d700e2ec9"),
+                            TransactionId = new Guid("04aeaea9-713d-4519-9c8f-eef4acced9cf"),
+                            Amount = -1m,
+                            Id = new Guid("6a05d346-411a-4ca8-972f-d8ce354d4070"),
+                            TransactionRole = 1
+                        },
+                        new
+                        {
+                            WalletId = new Guid("621d80cf-cb97-46b2-9f0c-64e68031c859"),
+                            TransactionId = new Guid("04aeaea9-713d-4519-9c8f-eef4acced9cf"),
+                            Amount = 1m,
+                            Id = new Guid("6cd1257e-f45f-4872-9379-2e1882597562"),
+                            TransactionRole = 2
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -347,6 +576,18 @@ namespace ExchangeProject.DataAccess.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9"),
+                            RoleId = new Guid("aa835070-6a78-42c6-99df-c14682615666")
+                        },
+                        new
+                        {
+                            UserId = new Guid("d776cec2-4120-4d88-b8a5-ece32765a970"),
+                            RoleId = new Guid("f7f50d37-b8d5-4cf4-9c3b-427463a871b8")
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
@@ -370,32 +611,21 @@ namespace ExchangeProject.DataAccess.Migrations
 
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.Asset", b =>
                 {
+                    b.HasOne("ExchangeProject.Entities.Concrete.Coin", "Coin")
+                        .WithMany("Assets")
+                        .HasForeignKey("CoinId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ExchangeProject.Entities.Concrete.Wallet", "Wallet")
                         .WithMany("Assets")
                         .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Wallet");
-                });
-
-            modelBuilder.Entity("ExchangeProject.Entities.Concrete.AssetCoin", b =>
-                {
-                    b.HasOne("ExchangeProject.Entities.Concrete.Asset", "Asset")
-                        .WithMany("AssetCoins")
-                        .HasForeignKey("AssetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ExchangeProject.Entities.Concrete.Coin", "Coin")
-                        .WithMany("AssetCoins")
-                        .HasForeignKey("CoinId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Asset");
-
                     b.Navigation("Coin");
+
+                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.CoinPair", b =>
@@ -514,14 +744,9 @@ namespace ExchangeProject.DataAccess.Migrations
                     b.Navigation("Wallet");
                 });
 
-            modelBuilder.Entity("ExchangeProject.Entities.Concrete.Asset", b =>
-                {
-                    b.Navigation("AssetCoins");
-                });
-
             modelBuilder.Entity("ExchangeProject.Entities.Concrete.Coin", b =>
                 {
-                    b.Navigation("AssetCoins");
+                    b.Navigation("Assets");
 
                     b.Navigation("CoinPairs");
 

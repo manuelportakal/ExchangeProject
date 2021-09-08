@@ -13,7 +13,14 @@ namespace ExchangeProject.Entities.Concrete
         public List<WalletTransaction> WalletTransactions { get; set; }
         public Guid CoinId { get; set; }
         public Coin Coin { get; set; }
-        public decimal Amount { get; set; }
+        public Status Status { get; set; }
         public DateTime TransactionTime { get; set; }
+
+    }
+
+    public enum Status : byte
+    {
+        True = 1,
+        False = 0
     }
 }

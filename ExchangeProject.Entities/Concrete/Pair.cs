@@ -11,6 +11,7 @@ namespace ExchangeProject.Entities.Concrete
     {
         public Guid Id { get; set; }
         public List<CoinPair> CoinPairs { get; set; }
+        public string Name { get; set; }
         public decimal Price { get; set; }
     }
 }

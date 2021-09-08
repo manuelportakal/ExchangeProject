@@ -67,6 +67,7 @@ namespace ExchangeProject.DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
@@ -204,7 +205,7 @@ namespace ExchangeProject.DataAccess.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CoinId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Status = table.Column<byte>(type: "tinyint", nullable: false),
                     TransactionTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -248,12 +249,19 @@ namespace ExchangeProject.DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CoinId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     WalletId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Asset", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Asset_Coins_CoinId",
+                        column: x => x.CoinId,
+                        principalTable: "Coins",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Asset_Wallet_WalletId",
                         column: x => x.WalletId,
@@ -266,9 +274,11 @@ namespace ExchangeProject.DataAccess.Migrations
                 name: "WalletTransaction",
                 columns: table => new
                 {
-                    WalletId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TransactionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    WalletId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TransactionRole = table.Column<int>(type: "int", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -287,29 +297,105 @@ namespace ExchangeProject.DataAccess.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "AssetCoin",
-                columns: table => new
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
                 {
-                    AssetId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CoinId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
+                    { new Guid("aa835070-6a78-42c6-99df-c14682615666"), "d86edc7a-432b-4f58-943c-fff011f97649", "Admin", null },
+                    { new Guid("f7f50d37-b8d5-4cf4-9c3b-427463a871b8"), "50410ae9-d65a-4263-930c-6d193c963c48", "Member", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[,]
                 {
-                    table.PrimaryKey("PK_AssetCoin", x => new { x.CoinId, x.AssetId });
-                    table.ForeignKey(
-                        name: "FK_AssetCoin_Asset_AssetId",
-                        column: x => x.AssetId,
-                        principalTable: "Asset",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AssetCoin_Coins_CoinId",
-                        column: x => x.CoinId,
-                        principalTable: "Coins",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    { new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9"), 0, "0d366152-b779-48fa-b156-cc619631b797", "yavuzemilli@gmail.com", false, "Yavuz", "Emilli", false, null, null, null, "AQAAAAEAACcQAAAAEJGf+hXmI8zoCUnoIbM6Ji7I7TIrw77MTDD/oHaHQ8zNj1y3DZx/qKTy6s619D4euA==", null, false, null, false, "manuelportakal" },
+                    { new Guid("d776cec2-4120-4d88-b8a5-ece32765a970"), 0, "ce6213dd-3e66-44c9-bfa3-172c627b4364", "erenozder@gmail.com", false, "Eren", "Ozder", false, null, null, null, "AQAAAAEAACcQAAAAECy/klVN7MCsbE4AdjXhw29xA2PxUVcD506g5WkzzKsTX9yQdiPaT4AeDel49BuVxg==", null, false, null, false, "erno" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Coins",
+                columns: new[] { "Id", "Code", "Name", "Symbol" },
+                values: new object[,]
+                {
+                    { new Guid("4c69b0b4-4633-45e6-b461-48684bc23011"), "BTC", "Bitcoin", null },
+                    { new Guid("e1493a7f-5c0e-4f53-97a5-745222430809"), "ETH", "Ethereum", null },
+                    { new Guid("41ec3edd-12a6-47dd-beef-6ea0cd5c5788"), "ADA", "Cardano", null },
+                    { new Guid("68c216d0-bb53-416f-b65d-7066be83c744"), "BNB", "Binance Coin", null },
+                    { new Guid("5aa4cd28-38a4-4b55-a9f5-e03a0569a1a9"), "USDT", "Tether", null },
+                    { new Guid("21ce2213-fd86-43c5-bb0a-c5f0ef6439e5"), "SOL", "Solana", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Pairs",
+                columns: new[] { "Id", "Name", "Price" },
+                values: new object[,]
+                {
+                    { new Guid("3fbf715a-e9b4-4324-987e-1459ad1435f9"), "BTC-USDT", 51317.89m },
+                    { new Guid("6d9b7d78-b560-4de1-9359-82c71848c42b"), "ETH-USDT", 3772.04m },
+                    { new Guid("77033d4b-0933-43ec-978f-2387f3f0a702"), "ADA-USDT", 2.64m },
+                    { new Guid("b1f5e042-2814-4633-95b9-5a9bd6161301"), "BNB-USDT", 479.59m },
+                    { new Guid("ac85e80e-f34f-4aae-80ce-39999aa8c56a"), "SOLANA-USDT", 182.94m }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[,]
+                {
+                    { new Guid("aa835070-6a78-42c6-99df-c14682615666"), new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9") },
+                    { new Guid("f7f50d37-b8d5-4cf4-9c3b-427463a871b8"), new Guid("d776cec2-4120-4d88-b8a5-ece32765a970") }
+                });
+
+            migrationBuilder.InsertData(
+                table: "CoinPair",
+                columns: new[] { "CoinId", "PairId", "Id" },
+                values: new object[,]
+                {
+                    { new Guid("4c69b0b4-4633-45e6-b461-48684bc23011"), new Guid("3fbf715a-e9b4-4324-987e-1459ad1435f9"), new Guid("7d1e7831-af96-42df-b768-8647a324cbbf") },
+                    { new Guid("5aa4cd28-38a4-4b55-a9f5-e03a0569a1a9"), new Guid("3fbf715a-e9b4-4324-987e-1459ad1435f9"), new Guid("7d1e7831-af96-42df-b768-8647a324cbbf") },
+                    { new Guid("e1493a7f-5c0e-4f53-97a5-745222430809"), new Guid("6d9b7d78-b560-4de1-9359-82c71848c42b"), new Guid("7683f95c-5b64-45fb-bd14-e308dd29aee7") },
+                    { new Guid("5aa4cd28-38a4-4b55-a9f5-e03a0569a1a9"), new Guid("6d9b7d78-b560-4de1-9359-82c71848c42b"), new Guid("7683f95c-5b64-45fb-bd14-e308dd29aee7") },
+                    { new Guid("41ec3edd-12a6-47dd-beef-6ea0cd5c5788"), new Guid("77033d4b-0933-43ec-978f-2387f3f0a702"), new Guid("b69b0f5a-9e96-4a21-9461-1af0a37957b4") },
+                    { new Guid("5aa4cd28-38a4-4b55-a9f5-e03a0569a1a9"), new Guid("77033d4b-0933-43ec-978f-2387f3f0a702"), new Guid("b69b0f5a-9e96-4a21-9461-1af0a37957b4") },
+                    { new Guid("68c216d0-bb53-416f-b65d-7066be83c744"), new Guid("b1f5e042-2814-4633-95b9-5a9bd6161301"), new Guid("a4b6d863-2b21-4011-8e3c-adbe99423bda") },
+                    { new Guid("5aa4cd28-38a4-4b55-a9f5-e03a0569a1a9"), new Guid("b1f5e042-2814-4633-95b9-5a9bd6161301"), new Guid("a4b6d863-2b21-4011-8e3c-adbe99423bda") },
+                    { new Guid("21ce2213-fd86-43c5-bb0a-c5f0ef6439e5"), new Guid("ac85e80e-f34f-4aae-80ce-39999aa8c56a"), new Guid("4cd794ba-572c-4014-b6aa-9d9d7c701b21") },
+                    { new Guid("5aa4cd28-38a4-4b55-a9f5-e03a0569a1a9"), new Guid("ac85e80e-f34f-4aae-80ce-39999aa8c56a"), new Guid("4cd794ba-572c-4014-b6aa-9d9d7c701b21") }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Transaction",
+                columns: new[] { "Id", "CoinId", "Status", "TransactionTime" },
+                values: new object[] { new Guid("04aeaea9-713d-4519-9c8f-eef4acced9cf"), new Guid("4c69b0b4-4633-45e6-b461-48684bc23011"), (byte)1, new DateTime(2021, 9, 8, 9, 34, 47, 887, DateTimeKind.Utc).AddTicks(9184) });
+
+            migrationBuilder.InsertData(
+                table: "Wallet",
+                columns: new[] { "Id", "AppUserId" },
+                values: new object[,]
+                {
+                    { new Guid("83d8f26c-e7d3-4480-bdd5-500d700e2ec9"), new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9") },
+                    { new Guid("621d80cf-cb97-46b2-9f0c-64e68031c859"), new Guid("d776cec2-4120-4d88-b8a5-ece32765a970") }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Asset",
+                columns: new[] { "Id", "Amount", "CoinId", "WalletId" },
+                values: new object[,]
+                {
+                    { new Guid("6a05d346-411a-4ca8-972f-d8ce354d4070"), 9999m, new Guid("4c69b0b4-4633-45e6-b461-48684bc23011"), new Guid("83d8f26c-e7d3-4480-bdd5-500d700e2ec9") },
+                    { new Guid("6cd1257e-f45f-4872-9379-2e1882597562"), 1m, new Guid("4c69b0b4-4633-45e6-b461-48684bc23011"), new Guid("621d80cf-cb97-46b2-9f0c-64e68031c859") }
+                });
+
+            migrationBuilder.InsertData(
+                table: "WalletTransaction",
+                columns: new[] { "TransactionId", "WalletId", "Amount", "Id", "TransactionRole" },
+                values: new object[,]
+                {
+                    { new Guid("04aeaea9-713d-4519-9c8f-eef4acced9cf"), new Guid("83d8f26c-e7d3-4480-bdd5-500d700e2ec9"), -1m, new Guid("6a05d346-411a-4ca8-972f-d8ce354d4070"), 1 },
+                    { new Guid("04aeaea9-713d-4519-9c8f-eef4acced9cf"), new Guid("621d80cf-cb97-46b2-9f0c-64e68031c859"), 1m, new Guid("6cd1257e-f45f-4872-9379-2e1882597562"), 2 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -352,14 +438,14 @@ namespace ExchangeProject.DataAccess.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Asset_CoinId",
+                table: "Asset",
+                column: "CoinId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Asset_WalletId",
                 table: "Asset",
                 column: "WalletId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AssetCoin_AssetId",
-                table: "AssetCoin",
-                column: "AssetId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CoinPair_CoinId",
@@ -401,7 +487,7 @@ namespace ExchangeProject.DataAccess.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "AssetCoin");
+                name: "Asset");
 
             migrationBuilder.DropTable(
                 name: "CoinPair");
@@ -411,9 +497,6 @@ namespace ExchangeProject.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "Asset");
 
             migrationBuilder.DropTable(
                 name: "Pairs");

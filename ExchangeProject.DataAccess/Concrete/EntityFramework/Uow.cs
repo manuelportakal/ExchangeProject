@@ -21,7 +21,6 @@ namespace ExchangeProject.DataAccess.Concrete.EntityFramework
         private readonly EfCoinRepository _efCoinRepository;
         private readonly EfAssetRepository _efAssetRepository;
         private readonly EfTransactionRepository _efTransactionRepository;
-        private readonly EfAssetCoinRepository _efAssetCoinRepository;
         private readonly EfCoinPairRepository _efCoinPairRepository;
         private readonly EfWalletTransactionRepository _efWalletTransactionRepository;
 
@@ -33,8 +32,6 @@ namespace ExchangeProject.DataAccess.Concrete.EntityFramework
         public IAppRoleRepository AppRole => _efAppRoleRepository ?? new EfAppRoleRepository(_context);
 
         public IAppUserRepository AppUser => _efAppUserRepository ?? new EfAppUserRepository(_context);
-
-        public IAssetCoinRepository AssetCoin => _efAssetCoinRepository ?? new EfAssetCoinRepository(_context);
 
         public IAssetRepository Asset => _efAssetRepository ?? new EfAssetRepository(_context);
 

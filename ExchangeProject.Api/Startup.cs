@@ -1,4 +1,11 @@
+using ExchangeProject.Business.Abstract;
+using ExchangeProject.Business.Concrete.Services;
+using ExchangeProject.Common.DataAccess;
+using ExchangeProject.Common.DataAccess.EntityFramework;
+using ExchangeProject.DataAccess.Abstract;
+using ExchangeProject.DataAccess.Concrete.EntityFramework;
 using ExchangeProject.DataAccess.Concrete.EntityFramework.Context;
+using ExchangeProject.DataAccess.Concrete.EntityFramework.Repositories;
 using ExchangeProject.Entities.Concrete;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,6 +20,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ExchangeProject.Api
@@ -32,10 +40,14 @@ namespace ExchangeProject.Api
             services.AddDbContext<ExchangeDbContext>();
             services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<ExchangeDbContext>().AddDefaultTokenProviders();
             services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ExchangeProject.Api", Version = "v1" });
             });
+
+            services.AddScoped<IUow, Uow>();
+            services.AddScoped<ICoinService, CoinService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

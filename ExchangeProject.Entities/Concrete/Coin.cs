@@ -13,8 +13,8 @@ namespace ExchangeProject.Entities.Concrete
         public string Name { get; set; }
         public string Code { get; set; }
         public string Symbol { get; set; }
+        public List<Asset> Assets { get; set; }
         public List<CoinPair> CoinPairs { get; set; }
-        public List<AssetCoin> AssetCoins { get; set; }
         public List<Transaction> Transactions { get; set; }
     }
 }

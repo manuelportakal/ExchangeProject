@@ -9,12 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ExchangeProject.Business\ExchangeProject.Business.csproj" />
     <ProjectReference Include="..\ExchangeProject.DataAccess\ExchangeProject.DataAccess.csproj" />
-    <ProjectReference Include="..\ExchangeProject.Entities\ExchangeProject.Entities.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

@@ -29,24 +29,16 @@ namespace ExchangeProject.Common.DataAccess.EntityFramework
             await Task.Run(() => { _context.Set<TEntity>().Remove(entity); });
         }
 
-        public async Task<IList<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate = null)
+        public async Task<List<TEntity>> GetAllAsync()
         {
             IQueryable<TEntity> query = _context.Set<TEntity>();
-            if (predicate != null)
-            {
-                query = query.Where(predicate);
-            }
 
             return await query.ToListAsync();
         }
 
-        public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate)
+        public async Task<TEntity> GetAsync(Guid id)
         {
             IQueryable<TEntity> query = _context.Set<TEntity>();
-            if (predicate != null)
-            {
-                query = query.Where(predicate);
-            }
 
             return await query.SingleOrDefaultAsync();
         }
