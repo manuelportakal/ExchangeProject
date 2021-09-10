@@ -50,13 +50,13 @@ namespace ExchangeProject.DataAccess.Migrations
                         new
                         {
                             Id = new Guid("aa835070-6a78-42c6-99df-c14682615666"),
-                            ConcurrencyStamp = "d86edc7a-432b-4f58-943c-fff011f97649",
+                            ConcurrencyStamp = "5ea4efa9-881d-4e4c-9521-3d0276ec1a5a",
                             Name = "Admin"
                         },
                         new
                         {
                             Id = new Guid("f7f50d37-b8d5-4cf4-9c3b-427463a871b8"),
-                            ConcurrencyStamp = "50410ae9-d65a-4263-930c-6d193c963c48",
+                            ConcurrencyStamp = "3be5fc7f-99e2-489d-b2c8-36167e6682d0",
                             Name = "Member"
                         });
                 });
@@ -137,13 +137,13 @@ namespace ExchangeProject.DataAccess.Migrations
                         {
                             Id = new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0d366152-b779-48fa-b156-cc619631b797",
+                            ConcurrencyStamp = "4e9541db-062d-4500-9ccb-e4934c796310",
                             Email = "yavuzemilli@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "Yavuz",
                             LastName = "Emilli",
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEJGf+hXmI8zoCUnoIbM6Ji7I7TIrw77MTDD/oHaHQ8zNj1y3DZx/qKTy6s619D4euA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEzeMnkmc8zXnSN+hfIpdeAe36X4H0Kw+4jBJeDO2DoxR7Pt7O8x5Cz3tBP62hNo5w==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "manuelportakal"
@@ -152,13 +152,13 @@ namespace ExchangeProject.DataAccess.Migrations
                         {
                             Id = new Guid("d776cec2-4120-4d88-b8a5-ece32765a970"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ce6213dd-3e66-44c9-bfa3-172c627b4364",
+                            ConcurrencyStamp = "01b5b35b-6e67-4fe3-a509-c65a76c3a5d6",
                             Email = "erenozder@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "Eren",
                             LastName = "Ozder",
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAECy/klVN7MCsbE4AdjXhw29xA2PxUVcD506g5WkzzKsTX9yQdiPaT4AeDel49BuVxg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGzUl5shPCNtw+RIuvqRntpKe79RQPcl0H7/OcSwLdaMZdRGTVlohHMgwxQOjfCGww==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "erno"
@@ -419,7 +419,7 @@ namespace ExchangeProject.DataAccess.Migrations
                             Id = new Guid("04aeaea9-713d-4519-9c8f-eef4acced9cf"),
                             CoinId = new Guid("4c69b0b4-4633-45e6-b461-48684bc23011"),
                             Status = (byte)1,
-                            TransactionTime = new DateTime(2021, 9, 8, 9, 34, 47, 887, DateTimeKind.Utc).AddTicks(9184)
+                            TransactionTime = new DateTime(2021, 9, 10, 12, 10, 19, 433, DateTimeKind.Utc).AddTicks(5747)
                         });
                 });
 

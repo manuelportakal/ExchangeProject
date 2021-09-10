@@ -302,8 +302,8 @@ namespace ExchangeProject.DataAccess.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("aa835070-6a78-42c6-99df-c14682615666"), "d86edc7a-432b-4f58-943c-fff011f97649", "Admin", null },
-                    { new Guid("f7f50d37-b8d5-4cf4-9c3b-427463a871b8"), "50410ae9-d65a-4263-930c-6d193c963c48", "Member", null }
+                    { new Guid("aa835070-6a78-42c6-99df-c14682615666"), "5ea4efa9-881d-4e4c-9521-3d0276ec1a5a", "Admin", null },
+                    { new Guid("f7f50d37-b8d5-4cf4-9c3b-427463a871b8"), "3be5fc7f-99e2-489d-b2c8-36167e6682d0", "Member", null }
                 });
 
             migrationBuilder.InsertData(
@@ -311,8 +311,8 @@ namespace ExchangeProject.DataAccess.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9"), 0, "0d366152-b779-48fa-b156-cc619631b797", "yavuzemilli@gmail.com", false, "Yavuz", "Emilli", false, null, null, null, "AQAAAAEAACcQAAAAEJGf+hXmI8zoCUnoIbM6Ji7I7TIrw77MTDD/oHaHQ8zNj1y3DZx/qKTy6s619D4euA==", null, false, null, false, "manuelportakal" },
-                    { new Guid("d776cec2-4120-4d88-b8a5-ece32765a970"), 0, "ce6213dd-3e66-44c9-bfa3-172c627b4364", "erenozder@gmail.com", false, "Eren", "Ozder", false, null, null, null, "AQAAAAEAACcQAAAAECy/klVN7MCsbE4AdjXhw29xA2PxUVcD506g5WkzzKsTX9yQdiPaT4AeDel49BuVxg==", null, false, null, false, "erno" }
+                    { new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9"), 0, "4e9541db-062d-4500-9ccb-e4934c796310", "yavuzemilli@gmail.com", false, "Yavuz", "Emilli", false, null, null, null, "AQAAAAEAACcQAAAAEEzeMnkmc8zXnSN+hfIpdeAe36X4H0Kw+4jBJeDO2DoxR7Pt7O8x5Cz3tBP62hNo5w==", null, false, null, false, "manuelportakal" },
+                    { new Guid("d776cec2-4120-4d88-b8a5-ece32765a970"), 0, "01b5b35b-6e67-4fe3-a509-c65a76c3a5d6", "erenozder@gmail.com", false, "Eren", "Ozder", false, null, null, null, "AQAAAAEAACcQAAAAEGzUl5shPCNtw+RIuvqRntpKe79RQPcl0H7/OcSwLdaMZdRGTVlohHMgwxQOjfCGww==", null, false, null, false, "erno" }
                 });
 
             migrationBuilder.InsertData(
@@ -369,7 +369,7 @@ namespace ExchangeProject.DataAccess.Migrations
             migrationBuilder.InsertData(
                 table: "Transaction",
                 columns: new[] { "Id", "CoinId", "Status", "TransactionTime" },
-                values: new object[] { new Guid("04aeaea9-713d-4519-9c8f-eef4acced9cf"), new Guid("4c69b0b4-4633-45e6-b461-48684bc23011"), (byte)1, new DateTime(2021, 9, 8, 9, 34, 47, 887, DateTimeKind.Utc).AddTicks(9184) });
+                values: new object[] { new Guid("04aeaea9-713d-4519-9c8f-eef4acced9cf"), new Guid("4c69b0b4-4633-45e6-b461-48684bc23011"), (byte)1, new DateTime(2021, 9, 10, 12, 10, 19, 433, DateTimeKind.Utc).AddTicks(5747) });
 
             migrationBuilder.InsertData(
                 table: "Wallet",
